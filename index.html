@@ -1,0 +1,2940 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zeeshan Electric — Powering Tomorrow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================
+   RESET & TOKENS
+   ============================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  /* Dark (default) */
+  --bg:           #080C14;
+  --bg-2:         #0D1220;
+  --bg-3:         #111827;
+  --surface:      rgba(255,255,255,0.04);
+  --surface-2:    rgba(255,255,255,0.07);
+  --border:       rgba(255,255,255,0.08);
+  --border-2:     rgba(255,255,255,0.14);
+  --text-1:       #F8FAFF;
+  --text-2:       #8A9BB8;
+  --text-3:       #4A5D7A;
+  --accent:       #4F8EF7;
+  --accent-2:     #7DD3FC;
+  --accent-glow:  rgba(79,142,247,0.3);
+  --accent-warm:  #F59E0B;
+  --green:        #34D399;
+  --nav-h:        72px;
+  --r-sm:         12px;
+  --r-md:         20px;
+  --r-lg:         32px;
+  --r-xl:         48px;
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'DM Mono', monospace;
+  --ease-out-expo: cubic-bezier(0.16,1,0.3,1);
+  --ease-spring:   cubic-bezier(0.34,1.56,0.64,1);
+}
+.ze-toast {
+  position: fixed;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--navy);
+  border: 1.5px solid rgba(245,184,0,0.35);
+  border-radius: 16px;
+  padding: 14px 22px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 12px 40px rgba(13,27,42,0.45), 0 0 0 1px rgba(245,184,0,0.1);
+  z-index: 9999;
+  transition: bottom 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  white-space: nowrap;
+}
+
+.ze-toast.show {
+  bottom: 30px;
+}
+
+.ze-toast-icon {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.ze-toast-icon svg {
+  width: 16px; height: 16px;
+  fill: none;
+  stroke: var(--navy);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ze-toast-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ze-toast-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.ze-toast-sub {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+@media (max-width: 480px) {
+  .ze-toast { width: 90%; white-space: normal; bottom: -200px; }
+}
+
+[data-theme="light"] {
+  --bg:        #F4F7FF;
+  --bg-2:      #EAEFF9;
+  --bg-3:      #DDE5F5;
+  --surface:   rgba(0,0,0,0.04);
+  --surface-2: rgba(0,0,0,0.07);
+  --border:    rgba(0,0,0,0.08);
+  --border-2:  rgba(0,0,0,0.14);
+  --text-1:    #0D1220;
+  --text-2:    #4A5D7A;
+  --text-3:    #8A9BB8;
+  --accent:    #2563EB;
+  --accent-2:  #1D4ED8;
+  --accent-glow: rgba(37,99,235,0.25);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text-1);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.5s, color 0.5s;
+}
+
+/* ============================================
+   NOISE OVERLAY
+   ============================================ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 4px; }
+
+/* ============================================
+   UTILITIES
+   ============================================ */
+.container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+.section-pad { padding: 140px 0; }
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding: 6px 14px;
+  border: 1px solid rgba(79,142,247,0.25);
+  border-radius: 100px;
+  background: rgba(79,142,247,0.08);
+  margin-bottom: 24px;
+}
+
+.tag::before { content: '●'; font-size: 6px; animation: pulse-dot 2s infinite; }
+@keyframes pulse-dot {
+  0%,100% { opacity:1; }
+  50% { opacity:0.3; }
+}
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  z-index: 900;
+  transition: all 0.4s var(--ease-out-expo);
+}
+
+nav.scrolled {
+  background: rgba(8,12,20,0.85);
+  backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+}
+
+[data-theme="light"] nav.scrolled {
+  background: rgba(244,247,255,0.88);
+}
+
+.nav-inner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-1);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 901;
+}
+
+.nav-logo-icon {
+  width: 32px; height: 32px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 0 20px var(--accent-glow);
+  transition: transform 0.3s var(--ease-spring);
+}
+.nav-logo:hover .nav-logo-icon { transform: rotate(-10deg) scale(1.1); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-2);
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: var(--r-sm);
+  transition: color 0.2s, background 0.2s;
+}
+.nav-links a:hover { color: var(--text-1); background: var(--surface-2); }
+
+.nav-right { display: flex; align-items: center; gap: 12px; z-index: 901; }
+
+.btn-nav {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 20px;
+  border-radius: var(--r-sm);
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out-expo);
+  box-shadow: 0 0 0 0 var(--accent-glow);
+}
+.btn-nav:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px var(--accent-glow);
+}
+
+.theme-btn {
+  width: 38px; height: 38px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border-2);
+  background: var(--surface);
+  color: var(--text-2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+.theme-btn:hover { color: var(--text-1); background: var(--surface-2); }
+
+/* Hamburger */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 901;
+}
+.bar { width: 22px; height: 1.5px; background: var(--text-1); transition: 0.4s; border-radius: 2px; }
+.hamburger.active .bar:nth-child(1) { transform: rotate(-45deg) translate(-4px, 5.5px); }
+.hamburger.active .bar:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger.active .bar:nth-child(3) { transform: rotate(45deg) translate(-4px, -5.5px); }
+
+/* Mobile Menu */
+.mob-menu {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 899;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s var(--ease-out-expo);
+}
+.mob-menu.active { opacity: 1; pointer-events: all; }
+.mob-menu a {
+  font-family: var(--font-display);
+  font-size: clamp(2rem,8vw,4rem);
+  font-weight: 700;
+  color: var(--text-1);
+  text-decoration: none;
+  transition: color 0.2s;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.4s, transform 0.4s var(--ease-out-expo), color 0.2s;
+}
+.mob-menu.active a { opacity: 1; transform: translateY(0); }
+.mob-menu a:nth-child(1) { transition-delay: 0.05s; }
+.mob-menu a:nth-child(2) { transition-delay: 0.1s; }
+.mob-menu a:nth-child(3) { transition-delay: 0.15s; }
+.mob-menu a:nth-child(4) { transition-delay: 0.2s; }
+.mob-menu a:nth-child(5) { transition-delay: 0.25s; }
+.mob-menu a:hover { color: var(--accent); }
+
+/* ============================================
+   HERO
+   ============================================ */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: var(--nav-h);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Radial glow background */
+.hero-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.hero-glow::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 900px; height: 900px;
+  background: radial-gradient(ellipse, rgba(79,142,247,0.12) 0%, transparent 65%);
+  animation: glow-pulse 6s ease-in-out infinite alternate;
+}
+@keyframes glow-pulse {
+  0% { transform: translateX(-50%) scale(1); opacity: 0.8; }
+  100% { transform: translateX(-50%) scale(1.1); opacity: 1; }
+}
+
+/* Grid lines */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(79,142,247,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,142,247,0.04) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 100%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.8s 0.2s var(--ease-out-expo) forwards;
+}
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content: '';
+  width: 40px; height: 1px;
+  background: linear-gradient(to right, transparent, var(--accent));
+}
+.hero-eyebrow::after { background: linear-gradient(to left, transparent, var(--accent)); }
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 9vw, 7.5rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  margin-bottom: 32px;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 0.9s 0.35s var(--ease-out-expo) forwards;
+}
+
+.hero-title .line-accent {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 50%, #A78BFA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block;
+}
+
+.hero-sub {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  color: var(--text-2);
+  line-height: 1.7;
+  max-width: 560px;
+  margin: 0 auto 48px;
+  font-weight: 300;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.9s 0.5s var(--ease-out-expo) forwards;
+}
+
+.hero-btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.9s 0.65s var(--ease-out-expo) forwards;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--r-md);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.25s var(--ease-out-expo);
+  box-shadow: 0 4px 20px var(--accent-glow);
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent);
+}
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 36px var(--accent-glow);
+  filter: brightness(1.1);
+}
+.btn-primary:active { transform: translateY(0); }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: var(--surface);
+  color: var(--text-1);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.25s var(--ease-out-expo);
+}
+.btn-ghost:hover { background: var(--surface-2); transform: translateY(-2px); }
+
+/* Hero stats */
+.hero-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+  margin-top: 72px;
+  padding-top: 48px;
+  border-top: 1px solid var(--border);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.9s 0.8s var(--ease-out-expo) forwards;
+}
+
+.stat-item { text-align: center; }
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-1);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-label {
+  font-size: 12px;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.stat-divider { width: 1px; height: 40px; background: var(--border); }
+
+/* Scroll indicator */
+.scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  animation: fadeUp 1s 1.2s var(--ease-out-expo) forwards;
+}
+.scroll-hint span {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.scroll-mouse {
+  width: 22px; height: 36px;
+  border: 1.5px solid var(--border-2);
+  border-radius: 12px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 6px;
+}
+.scroll-mouse::before {
+  content: '';
+  width: 3px; height: 8px;
+  background: var(--accent);
+  border-radius: 2px;
+  animation: scroll-anim 1.8s infinite var(--ease-out-expo);
+}
+@keyframes scroll-anim {
+  0% { transform: translateY(0); opacity: 1; }
+  80% { transform: translateY(10px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 0; }
+}
+
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================
+   SCROLL PROGRESS SIDEBAR
+   ============================================ */
+.scroll-sidebar {
+  position: fixed;
+  right: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 800;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 8px 0;
+  transition: all 0.3s var(--ease-out-expo);
+  text-decoration: none;
+}
+
+.sidebar-num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-3);
+  transition: color 0.3s;
+  opacity: 0;
+  transform: translateX(8px);
+  transition: all 0.3s var(--ease-out-expo);
+}
+
+.sidebar-track {
+  width: 2px;
+  height: 32px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+  transition: height 0.3s;
+}
+
+.sidebar-fill {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 0%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: height 0.1s linear;
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+.sidebar-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--border-2);
+  transition: all 0.3s var(--ease-out-expo);
+  flex-shrink: 0;
+}
+
+.sidebar-item.active .sidebar-dot {
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
+  transform: scale(1.5);
+}
+.sidebar-item.active .sidebar-num {
+  color: var(--accent);
+  opacity: 1;
+  transform: translateX(0);
+}
+.sidebar-item:hover .sidebar-num { opacity: 1; transform: translateX(0); }
+.sidebar-item.active .sidebar-track { height: 48px; }
+
+/* ============================================
+   SECTION REVEALS
+   ============================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.9s var(--ease-out-expo), transform 0.9s var(--ease-out-expo);
+}
+.reveal.active { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.9s var(--ease-out-expo), transform 0.9s var(--ease-out-expo);
+}
+.reveal-left.active { opacity: 1; transform: translateX(0); }
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.9s var(--ease-out-expo), transform 0.9s var(--ease-out-expo);
+}
+.reveal-scale.active { opacity: 1; transform: scale(1); }
+
+/* ============================================
+   SECTION HEADER
+   ============================================ */
+.section-header {
+  max-width: 600px;
+  margin: 0 auto 80px;
+  text-align: center;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 20px;
+  color: var(--text-1);
+}
+
+.section-sub {
+  font-size: 16px;
+  color: var(--text-2);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* ============================================
+   SERVICES (BENTO GRID)
+   ============================================ */
+#services { position: relative; }
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: auto;
+  gap: 16px;
+}
+
+.bento-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s var(--ease-out-expo);
+  cursor: default;
+}
+
+.bento-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-lg);
+  background: linear-gradient(135deg, rgba(79,142,247,0.06), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.bento-card:hover {
+  border-color: var(--border-2);
+  background: var(--surface-2);
+  transform: translateY(-4px);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+}
+.bento-card:hover::before { opacity: 1; }
+
+/* Glow on hover */
+.bento-card::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle at 50% 50%, var(--accent-glow), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+.bento-card:hover::after { opacity: 0.3; }
+
+.b1 { grid-column: span 5; }
+.b2 { grid-column: span 7; }
+.b3 { grid-column: span 7; }
+.b4 { grid-column: span 5; }
+.b5 { grid-column: span 4; }
+.b6 { grid-column: span 4; }
+.b7 { grid-column: span 4; }
+
+.bento-icon {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  background: rgba(79,142,247,0.1);
+  border: 1px solid rgba(79,142,247,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 24px;
+  transition: transform 0.3s var(--ease-spring);
+}
+.bento-card:hover .bento-icon { transform: scale(1.1) rotate(-5deg); }
+
+.bento-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+  color: var(--text-1);
+}
+
+.bento-desc {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+.bento-feature-list {
+  list-style: none;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bento-feature-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-2);
+}
+.bento-feature-list li::before {
+  content: '✓';
+  width: 18px; height: 18px;
+  background: rgba(52,211,153,0.1);
+  color: var(--green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+.bento-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 16px;
+}
+.bento-tag.blue { background: rgba(79,142,247,0.1); color: var(--accent); border: 1px solid rgba(79,142,247,0.2); }
+.bento-tag.green { background: rgba(52,211,153,0.1); color: var(--green); border: 1px solid rgba(52,211,153,0.2); }
+.bento-tag.amber { background: rgba(245,158,11,0.1); color: var(--accent-warm); border: 1px solid rgba(245,158,11,0.2); }
+
+/* Big card visual */
+.bento-visual {
+  position: absolute;
+  right: 0; bottom: 0;
+  opacity: 0.12;
+  font-size: 120px;
+  line-height: 1;
+  pointer-events: none;
+  transition: opacity 0.4s, transform 0.4s var(--ease-out-expo);
+}
+.bento-card:hover .bento-visual { opacity: 0.2; transform: scale(1.05) rotate(-5deg); }
+
+/* ============================================
+   NUMBER COUNTER (STATS)
+   ============================================ */
+#stats {
+  position: relative;
+  overflow: hidden;
+}
+
+.stats-band {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 80px 0;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+
+.stat-block {
+  text-align: center;
+  padding: 0 40px;
+  position: relative;
+}
+.stat-block + .stat-block::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 20%; bottom: 20%;
+  width: 1px;
+  background: var(--border);
+}
+
+.stat-big {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, var(--text-1), var(--text-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.stat-big .plus { color: var(--accent); -webkit-text-fill-color: var(--accent); }
+
+.stat-desc {
+  font-size: 13px;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* ============================================
+   PROCESS / HOW WE WORK
+   ============================================ */
+#process { position: relative; }
+
+.process-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.process-steps { display: flex; flex-direction: column; gap: 0; }
+
+.step-item {
+  display: flex;
+  gap: 24px;
+  padding: 32px 0;
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s;
+  cursor: default;
+  position: relative;
+}
+.step-item:first-child { padding-top: 0; }
+.step-item:last-child { border-bottom: none; }
+
+.step-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-3);
+  letter-spacing: 0.1em;
+  min-width: 32px;
+  padding-top: 3px;
+  transition: color 0.3s;
+}
+
+.step-content {}
+.step-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-1);
+  transition: color 0.3s;
+}
+.step-desc { font-size: 14px; color: var(--text-2); line-height: 1.7; font-weight: 300; }
+
+/* Step progress bar */
+.step-bar {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--border);
+  overflow: hidden;
+}
+.step-bar-fill {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 0%;
+  background: var(--accent);
+  transition: height 0.6s var(--ease-out-expo);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+.step-item.step-active .step-bar-fill { height: 100%; }
+.step-item.step-active .step-num { color: var(--accent); }
+.step-item.step-active .step-title { color: var(--accent); }
+
+/* Process right visual */
+.process-visual {
+  position: sticky;
+  top: 120px;
+  height: 480px;
+  border-radius: var(--r-xl);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.process-vis-inner {
+  text-align: center;
+  padding: 40px;
+}
+
+.vis-icon {
+  font-size: 80px;
+  margin-bottom: 24px;
+  display: block;
+  transition: all 0.5s var(--ease-spring);
+}
+.vis-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-1);
+  transition: all 0.4s;
+}
+.vis-sub {
+  font-size: 13px;
+  color: var(--text-2);
+  transition: all 0.4s;
+}
+
+/* Animated circuit background in visual */
+.circuit-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  background-image:
+    linear-gradient(var(--accent) 1px, transparent 1px),
+    linear-gradient(90deg, var(--accent) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* ============================================
+   TESTIMONIALS CAROUSEL
+   ============================================ */
+#testimonials { overflow: hidden; }
+
+.testimonials-track-wrapper {
+  position: relative;
+  margin-top: 60px;
+}
+
+/* Fade edges */
+.testimonials-track-wrapper::before,
+.testimonials-track-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 160px;
+  z-index: 2;
+  pointer-events: none;
+}
+.testimonials-track-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, var(--bg), transparent);
+}
+.testimonials-track-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, var(--bg), transparent);
+}
+
+.testimonials-track {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+  cursor: grab;
+}
+.testimonials-track:active { cursor: grabbing; }
+.testimonials-track:hover { animation-play-state: paused; }
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.testi-card {
+  width: 360px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 32px;
+  transition: border-color 0.3s, background 0.3s;
+}
+.testi-card:hover {
+  border-color: var(--border-2);
+  background: var(--surface-2);
+}
+
+.testi-stars {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 16px;
+}
+.testi-stars span { color: var(--accent-warm); font-size: 14px; }
+
+.testi-text {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.75;
+  margin-bottom: 24px;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.testi-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.testi-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #A78BFA);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.testi-name {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-1);
+  margin-bottom: 2px;
+}
+.testi-role { font-size: 12px; color: var(--text-3); }
+
+/* Second row (reversed) */
+.testimonials-track.reverse { animation-direction: reverse; margin-top: 20px; }
+
+/* ============================================
+   ABOUT
+   ============================================ */
+#about { position: relative; }
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.about-text-block {}
+.about-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 24px;
+  color: var(--text-1);
+}
+.about-body {
+  font-size: 16px;
+  color: var(--text-2);
+  line-height: 1.8;
+  font-weight: 300;
+  margin-bottom: 16px;
+}
+
+.about-represented {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px 16px;
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  border: 1px solid var(--border-2);
+  font-size: 13px;
+  color: var(--text-2);
+}
+.about-represented strong { color: var(--accent); font-family: var(--font-display); }
+
+.about-visual-stack {
+  position: relative;
+  height: 480px;
+}
+
+.about-card-main {
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 85%;
+  height: 380px;
+  background: linear-gradient(135deg, var(--bg-3), var(--bg-2));
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.about-card-inner {
+  padding: 32px;
+  width: 100%;
+}
+
+.about-card-small {
+  position: absolute;
+  top: 0; left: 0;
+  width: 65%;
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-lg);
+  padding: 24px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+
+.metric-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.metric-bar-track {
+  flex: 1;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.metric-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  box-shadow: 0 0 6px var(--accent-glow);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1s 0.3s var(--ease-out-expo);
+}
+.reveal.active .metric-bar-fill { transform: scaleX(1); }
+.metric-label { font-family: var(--font-mono); font-size: 10px; color: var(--text-3); min-width: 80px; text-transform: uppercase; letter-spacing: 0.08em; }
+.metric-val { font-family: var(--font-mono); font-size: 11px; color: var(--accent); min-width: 32px; text-align: right; }
+
+/* ============================================
+   FAQ
+   ============================================ */
+#faq {}
+
+.faq-wrapper { max-width: 720px; margin: 0 auto; }
+
+.faq-item {
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s;
+}
+
+.faq-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 0;
+  background: none;
+  border: none;
+  color: var(--text-1);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  gap: 16px;
+  transition: color 0.2s;
+}
+.faq-trigger:hover { color: var(--accent); }
+
+.faq-plus {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s var(--ease-spring);
+  font-size: 16px;
+  line-height: 1;
+}
+
+.faq-item.active .faq-plus {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  transform: rotate(45deg);
+}
+
+.faq-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s var(--ease-out-expo), padding 0.3s;
+}
+.faq-item.active .faq-panel { max-height: 300px; padding-bottom: 24px; }
+.faq-panel p {
+  font-size: 15px;
+  color: var(--text-2);
+  line-height: 1.75;
+  font-weight: 300;
+}
+
+/* ============================================
+   CONTACT
+   ============================================ */
+#contact {
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-glow {
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 800px; height: 400px;
+  background: radial-gradient(ellipse, rgba(79,142,247,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.contact-card {
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 80px 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 300px; height: 1px;
+  background: linear-gradient(to right, transparent, var(--accent), transparent);
+}
+
+.contact-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 20px;
+  color: var(--text-1);
+}
+
+.contact-sub {
+  font-size: 16px;
+  color: var(--text-2);
+  margin-bottom: 48px;
+  font-weight: 300;
+}
+
+.contact-btns {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-wa {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 32px;
+  background: #25D366;
+  color: white;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--r-md);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.25s var(--ease-out-expo);
+  box-shadow: 0 4px 20px rgba(37,211,102,0.3);
+}
+.btn-wa:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(37,211,102,0.4);
+}
+
+/* Phone number reveal */
+.phone-reveal {
+  margin-top: 32px;
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+  color: var(--text-2);
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+}
+.phone-reveal:hover { border-color: var(--accent); color: var(--text-1); background: var(--surface-2); }
+.phone-copy-icon { font-size: 14px; opacity: 0.5; transition: opacity 0.2s; }
+.phone-reveal:hover .phone-copy-icon { opacity: 1; }
+
+/* ============================================
+   FOOTER
+   ============================================ */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 0;
+}
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-copy {
+  font-size: 13px;
+  color: var(--text-3);
+  font-family: var(--font-mono);
+}
+.footer-links {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+}
+.footer-links a {
+  font-size: 13px;
+  color: var(--text-3);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--text-1); }
+
+/* ============================================
+   TOAST
+   ============================================ */
+#toast {
+  position: fixed;
+  bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--text-1);
+  color: var(--bg);
+  padding: 14px 24px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 9000;
+  opacity: 0;
+  transition: all 0.5s var(--ease-spring);
+  pointer-events: none;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  white-space: nowrap;
+}
+#toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.toast-icon {
+  width: 20px; height: 20px;
+  background: var(--green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: white;
+}
+
+/* ============================================
+   CURSOR GLOW (desktop only)
+   ============================================ */
+.cursor-glow {
+  position: fixed;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(79,142,247,0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s linear;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+  .b1,.b2,.b3,.b4 { grid-column: span 6; }
+  .b5,.b6,.b7 { grid-column: span 4; }
+  .scroll-sidebar { display: none; }
+  .stats-grid { grid-template-columns: repeat(2,1fr); gap: 32px; }
+  .stat-block + .stat-block::before { display: none; }
+}
+
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .btn-nav { display: none; }
+  .hamburger { display: flex; }
+  .hero-stats { gap: 24px; flex-wrap: wrap; }
+  .stat-divider { display: none; }
+  .bento-grid { display: flex; flex-direction: column; }
+  .bento-card { padding: 28px; }
+  .process-grid { grid-template-columns: 1fr; }
+  .process-visual { display: none; }
+  .about-grid { grid-template-columns: 1fr; }
+  .about-visual-stack { display: none; }
+  .contact-card { padding: 48px 28px; }
+  .stats-grid { grid-template-columns: repeat(2,1fr); }
+  .section-pad { padding: 80px 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- Cursor glow -->
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- ======================== NAV ======================== -->
+<nav id="mainNav">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">
+      <div class="nav-logo-icon">⚡</div>
+      Zeeshan Electric
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#testimonials">Reviews</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+
+    <div class="nav-right">
+      <button class="theme-btn" id="themeBtn" aria-label="Toggle theme">☀</button>
+      <button class="btn-nav" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Book Us</button>
+      <div class="hamburger" id="hamburger">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mob-menu" id="mobMenu">
+  <a href="#services">Services</a>
+  <a href="#process">Process</a>
+  <a href="#testimonials">Reviews</a>
+  <a href="#about">About</a>
+  <a href="#faq">FAQ</a>
+  <a href="#contact">Contact</a>
+  <a href="admin.html">Admin Panel</a>
+</div>
+
+<!-- ======================== SCROLL SIDEBAR ======================== -->
+<div class="scroll-sidebar" id="scrollSidebar">
+  <a class="sidebar-item" href="#hero" data-section="hero">
+    <span class="sidebar-num">01</span>
+    <div class="sidebar-track"><div class="sidebar-fill" id="fill-hero"></div></div>
+    <div class="sidebar-dot"></div>
+  </a>
+  <a class="sidebar-item" href="#services" data-section="services">
+    <span class="sidebar-num">02</span>
+    <div class="sidebar-track"><div class="sidebar-fill" id="fill-services"></div></div>
+    <div class="sidebar-dot"></div>
+  </a>
+  <a class="sidebar-item" href="#process" data-section="process">
+    <span class="sidebar-num">03</span>
+    <div class="sidebar-track"><div class="sidebar-fill" id="fill-process"></div></div>
+    <div class="sidebar-dot"></div>
+  </a>
+  <a class="sidebar-item" href="#testimonials" data-section="testimonials">
+    <span class="sidebar-num">04</span>
+    <div class="sidebar-track"><div class="sidebar-fill" id="fill-testimonials"></div></div>
+    <div class="sidebar-dot"></div>
+  </a>
+  <a class="sidebar-item" href="#about" data-section="about">
+    <span class="sidebar-num">05</span>
+    <div class="sidebar-track"><div class="sidebar-fill" id="fill-about"></div></div>
+    <div class="sidebar-dot"></div>
+  </a>
+  <a class="sidebar-item" href="#contact" data-section="contact">
+    <span class="sidebar-num">06</span>
+    <div class="sidebar-track"><div class="sidebar-fill" id="fill-contact"></div></div>
+    <div class="sidebar-dot"></div>
+  </a>
+</div>
+
+<!-- ======================== HERO ======================== -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-grid"></div>
+
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Certified Electrical Engineers · Since 2013</div>
+      <h1 class="hero-title">
+        Powering Life
+        <span class="line-accent">With Precision</span>
+      </h1>
+      <p class="hero-sub">
+        Next-generation electrical solutions for homes, industries, and smart spaces. 
+        Where craftsmanship meets cutting-edge automation.
+      </p>
+      <div class="hero-btns">
+        <a href="#contact" class="btn-primary">
+          Book Us / Contact
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M8 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#services" class="btn-ghost">
+          View Services
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-num" data-count="10">0</div>
+          <div class="stat-label">Years Active</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-num" data-count="800">0</div>
+          <div class="stat-label">Projects Done</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-num" data-count="99">0</div>
+          <div class="stat-label">% Satisfaction</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-num">24/7</div>
+          <div class="stat-label">Emergency Line</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-mouse"></div>
+  </div>
+</section>
+
+<!-- ======================== SERVICES (BENTO) ======================== -->
+<section id="services" class="section-pad">
+  <div class="container">
+    <div class="section-header">
+      <div class="tag reveal">Our Expertise</div>
+      <h2 class="section-title reveal reveal-delay-1">Everything you need,<br>handled right.</h2>
+      <p class="section-sub reveal reveal-delay-2">From a single socket to a full industrial plant — we bring the same precision and care to every project.</p>
+    </div>
+
+    <div class="bento-grid">
+      <!-- Big card 1 -->
+      <div class="bento-card b1 reveal">
+        <div class="bento-icon">🏠</div>
+        <div class="bento-title">Residential Wiring</div>
+        <div class="bento-desc">Complete home electrical architecture. New constructions, renovations, and smart upgrades. Every wire is placed with purpose.</div>
+        <ul class="bento-feature-list">
+          <li>Full home rewiring</li>
+          <li>Smart panel upgrades</li>
+          <li>Safety circuit breakers</li>
+        </ul>
+        <span class="bento-tag blue">Residential</span>
+        <div class="bento-visual">🏠</div>
+      </div>
+
+      <!-- Big card 2 -->
+      <div class="bento-card b2 reveal reveal-delay-1">
+        <div class="bento-icon">🏭</div>
+        <div class="bento-title">Industrial Power Systems</div>
+        <div class="bento-desc">Heavy-duty high-voltage infrastructure. We engineer power systems that keep factories and warehouses running with zero unplanned downtime.</div>
+        <ul class="bento-feature-list">
+          <li>3-phase power installation</li>
+          <li>Predictive maintenance plans</li>
+          <li>Transformer & switchgear setup</li>
+          <li>Emergency backup systems</li>
+        </ul>
+        <span class="bento-tag amber">Industrial</span>
+        <div class="bento-visual">⚙️</div>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="bento-card b3 reveal">
+        <div class="bento-icon">📱</div>
+        <div class="bento-title">Smart Home Automation</div>
+        <div class="bento-desc">Full IoT integration. Control lighting, climate, security, and appliances from a single app. We make your home intelligent.</div>
+        <ul class="bento-feature-list">
+          <li>Google Home / Alexa integration</li>
+          <li>Automated lighting scenes</li>
+          <li>Smart security cameras</li>
+        </ul>
+        <span class="bento-tag green">IoT / Smart</span>
+        <div class="bento-visual">🌐</div>
+      </div>
+
+      <div class="bento-card b4 reveal reveal-delay-1">
+        <div class="bento-icon">☀️</div>
+        <div class="bento-title">Solar & Renewable</div>
+        <div class="bento-desc">Future-proof your property with solar panel installation and battery backup systems. Reduce bills, reduce footprint.</div>
+        <span class="bento-tag green">Green Energy</span>
+        <div class="bento-visual">☀️</div>
+      </div>
+
+      <!-- Row 3 -->
+      <div class="bento-card b5 reveal">
+        <div class="bento-icon">🔌</div>
+        <div class="bento-title">EV Charging</div>
+        <div class="bento-desc">Home and commercial EV charging station setup. Future-ready infrastructure for your fleet.</div>
+        <span class="bento-tag blue">EV Ready</span>
+      </div>
+
+      <div class="bento-card b6 reveal reveal-delay-1">
+        <div class="bento-icon">🛡️</div>
+        <div class="bento-title">Safety & Compliance</div>
+        <div class="bento-desc">Full safety audits, certification, and code compliance. We ensure your installation meets every standard.</div>
+        <span class="bento-tag amber">Certified</span>
+      </div>
+
+      <div class="bento-card b7 reveal reveal-delay-2">
+        <div class="bento-icon">⚡</div>
+        <div class="bento-title">24/7 Emergency</div>
+        <div class="bento-desc">Critical failures don't wait for business hours. Our team is always on standby.</div>
+        <span class="bento-tag green">Always On</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== STATS ======================== -->
+<section id="stats">
+  <div class="stats-band">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-block reveal">
+          <div class="stat-big"><span class="counter" data-target="800">0</span><span class="plus">+</span></div>
+          <div class="stat-desc">Projects Completed</div>
+        </div>
+        <div class="stat-block reveal reveal-delay-1">
+          <div class="stat-big"><span class="counter" data-target="10">0</span><span class="plus">+</span></div>
+          <div class="stat-desc">Years of Experience</div>
+        </div>
+        <div class="stat-block reveal reveal-delay-2">
+          <div class="stat-big"><span class="counter" data-target="50">0</span><span style="color:var(--accent);-webkit-text-fill-color:var(--accent)">km</span></div>
+          <div class="stat-desc">Service Radius</div>
+        </div>
+        <div class="stat-block reveal reveal-delay-3">
+          <div class="stat-big"><span class="counter" data-target="99">0</span><span class="plus">%</span></div>
+          <div class="stat-desc">Client Satisfaction</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== PROCESS ======================== -->
+<section id="process" class="section-pad">
+  <div class="container">
+    <div class="section-header">
+      <div class="tag reveal">How It Works</div>
+      <h2 class="section-title reveal reveal-delay-1">From quote to completion,<br>seamlessly.</h2>
+    </div>
+
+    <div class="process-grid">
+      <div class="process-steps" id="processSteps">
+        <div class="step-item" data-step="0">
+          <div class="step-bar"><div class="step-bar-fill"></div></div>
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <div class="step-title">Consultation & Quote</div>
+            <div class="step-desc">Tell us about your project. We'll assess the scope, provide a detailed transparent quote with no hidden charges within 24 hours.</div>
+          </div>
+        </div>
+        <div class="step-item" data-step="1">
+          <div class="step-bar"><div class="step-bar-fill"></div></div>
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <div class="step-title">Planning & Design</div>
+            <div class="step-desc">Our engineers design the full electrical layout — load calculations, safety zones, and smart integrations — all documented and shared with you.</div>
+          </div>
+        </div>
+        <div class="step-item" data-step="2">
+          <div class="step-bar"><div class="step-bar-fill"></div></div>
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <div class="step-title">Installation</div>
+            <div class="step-desc">Our certified team installs with precision. We respect your space, work clean, and stick to the timeline. Every connection tested twice.</div>
+          </div>
+        </div>
+        <div class="step-item" data-step="3">
+          <div class="step-bar"><div class="step-bar-fill"></div></div>
+          <div class="step-num">04</div>
+          <div class="step-content">
+            <div class="step-title">Safety Inspection & Handover</div>
+            <div class="step-desc">Full safety audit before handover. You receive a compliance certificate, user guide, and 1-year workmanship warranty on all installations.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="process-visual reveal-scale">
+        <div class="circuit-bg"></div>
+        <div class="process-vis-inner" id="processVisual">
+          <span class="vis-icon">📋</span>
+          <div class="vis-title">Step 1</div>
+          <div class="vis-sub">Consultation & Quote</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== TESTIMONIALS ======================== -->
+<section id="testimonials" class="section-pad">
+  <div class="container">
+    <div class="section-header">
+      <div class="tag reveal">Client Reviews</div>
+      <h2 class="section-title reveal reveal-delay-1">Trusted by hundreds<br>across the city.</h2>
+    </div>
+  </div>
+
+  <div class="testimonials-track-wrapper reveal">
+    <div class="testimonials-track" id="track1">
+      <!-- Row 1 -->
+      <div class="testi-card">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-text">"Zeeshan Electric rewired our entire 3-storey house in just 4 days. The team was professional, clean, and the quality of work is exceptional. Couldn't be happier."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">AR</div>
+          <div><div class="testi-name">Ahmed Raza</div><div class="testi-role">Homeowner, Kolkata</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-text">"Our factory had repeated power failures. After Zeeshan Electric's industrial audit and upgrade, we haven't had a single issue in 18 months. Game changer."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">PK</div>
+          <div><div class="testi-name">Priya Kumar</div><div class="testi-role">Factory Manager, Howrah</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-text">"The smart automation they installed is absolutely incredible. I control every light and AC in my apartment from my phone. The setup was flawless."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#34D399,#059669)">SM</div>
+          <div><div class="testi-name">Santosh Mehta</div><div class="testi-role">Apartment Owner, Salt Lake</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-text">"Called them at 11 PM for an emergency short circuit. They were at my door within an hour, fixed everything safely. 24/7 service is not a gimmick — it's real."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#A78BFA,#7C3AED)">RD</div>
+          <div><div class="testi-name">Rina Das</div><div class="testi-role">Restaurant Owner, Park Street</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-text">"Transparent pricing, no surprises. They gave me a quote, they stuck to it. The solar installation is saving us ₹4,000 a month on electricity."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#F59E0B,#B45309)">NK</div>
+          <div><div class="testi-name">Nilanjan Karmakar</div><div class="testi-role">Villa Owner, New Town</div></div>
+        </div>
+      </div>
+      <!-- Duplicates for infinite scroll -->
+      <div class="testi-card">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-text">"Zeeshan Electric rewired our entire 3-storey house in just 4 days. The team was professional, clean, and the quality of work is exceptional."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">AR</div>
+          <div><div class="testi-name">Ahmed Raza</div><div class="testi-role">Homeowner, Kolkata</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-text">"Our factory had repeated power failures. After Zeeshan Electric's industrial audit and upgrade, we haven't had a single issue in 18 months."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">PK</div>
+          <div><div class="testi-name">Priya Kumar</div><div class="testi-role">Factory Manager, Howrah</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-text">"The smart automation they installed is absolutely incredible. I control every light and AC in my apartment from my phone."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#34D399,#059669)">SM</div>
+          <div><div class="testi-name">Santosh Mehta</div><div class="testi-role">Apartment Owner, Salt Lake</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-text">"Called them at 11 PM for an emergency. They were at my door within an hour, fixed everything safely. 24/7 service is real."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#A78BFA,#7C3AED)">RD</div>
+          <div><div class="testi-name">Rina Das</div><div class="testi-role">Restaurant Owner, Park Street</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-text">"Transparent pricing, no surprises. The solar installation is saving us ₹4,000 a month on electricity."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#F59E0B,#B45309)">NK</div>
+          <div><div class="testi-name">Nilanjan Karmakar</div><div class="testi-role">Villa Owner, New Town</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2 (reverse) -->
+    <div class="testimonials-track reverse" id="track2">
+      <div class="testi-card">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-text">"Represented by Anjali Electric — the team they sent for our commercial complex was top-notch. Every deadline was met, no compromises."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#60A5FA,#3B82F6)">MB</div>
+          <div><div class="testi-name">Mohan Biswas</div><div class="testi-role">Commercial Complex, Dumdum</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-text">"They upgraded our entire office to smart lighting. The energy savings are measurable — our electricity bill dropped 35% in the first month."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#F472B6,#EC4899)">TS</div>
+          <div><div class="testi-name">Tanisha Sen</div><div class="testi-role">Office Manager, Sector V</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-text">"Very honest team. They told me I didn't need the expensive option and went with a simpler solution. Saved me ₹15,000. That's rare in this industry."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#34D399,#10B981)">KG</div>
+          <div><div class="testi-name">Kartik Ghosh</div><div class="testi-role">Flat Owner, Rajarhat</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-text">"EV charging point was installed in under 3 hours. Perfect setup, clean cables, and they even showed me how to use the app. Stellar service."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#A78BFA,#6D28D9)">DR</div>
+          <div><div class="testi-name">Devika Roy</div><div class="testi-role">Car Owner, Behala</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-text">"Five stars for safety. They spotted a fire hazard in our old wiring that we had no idea about. Potentially saved our home. Cannot thank them enough."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#FB923C,#EA580C)">JP</div>
+          <div><div class="testi-name">Jayanta Paul</div><div class="testi-role">Homeowner, Barasat</div></div>
+        </div>
+      </div>
+      <!-- Duplicates -->
+      <div class="testi-card">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-text">"Represented by Anjali Electric — the team they sent for our commercial complex was top-notch. Every deadline was met, no compromises."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#60A5FA,#3B82F6)">MB</div>
+          <div><div class="testi-name">Mohan Biswas</div><div class="testi-role">Commercial Complex, Dumdum</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-text">"They upgraded our entire office to smart lighting. Our electricity bill dropped 35% in the first month alone."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#F472B6,#EC4899)">TS</div>
+          <div><div class="testi-name">Tanisha Sen</div><div class="testi-role">Office Manager, Sector V</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-text">"Very honest team. They told me I didn't need the expensive option. Saved me ₹15,000. That's rare in this industry."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#34D399,#10B981)">KG</div>
+          <div><div class="testi-name">Kartik Ghosh</div><div class="testi-role">Flat Owner, Rajarhat</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-text">"EV charging point installed in under 3 hours. Perfect setup, clean cables, and they showed me how to use the app."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#A78BFA,#6D28D9)">DR</div>
+          <div><div class="testi-name">Devika Roy</div><div class="testi-role">Car Owner, Behala</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <p class="testi-text">"Five stars for safety. They spotted a fire hazard in our old wiring. Potentially saved our home. Cannot thank them enough."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#FB923C,#EA580C)">JP</div>
+          <div><div class="testi-name">Jayanta Paul</div><div class="testi-role">Homeowner, Barasat</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== ABOUT ======================== -->
+<section id="about" class="section-pad">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-text-block reveal-left">
+        <div class="tag">About Us</div>
+        <h2 class="about-title">Craftsmanship meets<br>future technology.</h2>
+        <p class="about-body">Zeeshan Electric represents the intersection of <strong>traditional craftsmanship</strong> and <strong>future technology</strong>. We don't just fix wires — we design complete energy ecosystems for homes and industries.</p>
+        <p class="about-body">With over a decade of experience, our certified team is dedicated to transparency, rigorous safety protocols, and delivering an impeccable finish on every project we touch.</p>
+        <div class="about-represented">
+          <span>🤝</span>
+          <span>Represented by <strong>Anjali Electric</strong></span>
+        </div>
+      </div>
+
+      <div class="about-visual-stack reveal">
+        <div class="about-card-small">
+          <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:20px;">Performance Metrics</div>
+          <div class="metric-row">
+            <span class="metric-label">On-time rate</span>
+            <div class="metric-bar-track"><div class="metric-bar-fill" style="width:97%"></div></div>
+            <span class="metric-val">97%</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Safety score</span>
+            <div class="metric-bar-track"><div class="metric-bar-fill" style="width:100%;background:var(--green);box-shadow:0 0 6px rgba(52,211,153,0.4)"></div></div>
+            <span class="metric-val" style="color:var(--green)">100%</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Satisfaction</span>
+            <div class="metric-bar-track"><div class="metric-bar-fill" style="width:99%"></div></div>
+            <span class="metric-val">99%</span>
+          </div>
+        </div>
+
+        <div class="about-card-main">
+          <div style="position:absolute;inset:0;background:linear-gradient(135deg, rgba(79,142,247,0.08) 0%, transparent 60%);"></div>
+          <div style="font-size:100px;position:absolute;top:20px;right:20px;opacity:0.07">⚡</div>
+          <div class="about-card-inner">
+            <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">10+ years</div>
+            <div style="font-family:var(--font-display);font-size:1.5rem;font-weight:800;color:var(--text-1);letter-spacing:-0.02em;">Powering West Bengal's<br>finest homes & industries.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== FAQ ======================== -->
+<section id="faq" class="section-pad">
+  <div class="container">
+    <div class="section-header">
+      <div class="tag reveal">FAQ</div>
+      <h2 class="section-title reveal reveal-delay-1">Common questions,<br>clear answers.</h2>
+    </div>
+
+    <div class="faq-wrapper">
+      <div class="faq-item reveal">
+        <button class="faq-trigger">
+          <span>Do you provide 24/7 emergency services?</span>
+          <span class="faq-plus">+</span>
+        </button>
+        <div class="faq-panel"><p>Yes. Electrical emergencies don't follow business hours. We have a dedicated standby team available around the clock for critical failures, short circuits, and power outages. Call us any time — we'll be there.</p></div>
+      </div>
+
+      <div class="faq-item reveal reveal-delay-1">
+        <button class="faq-trigger">
+          <span>What is your service area?</span>
+          <span class="faq-plus">+</span>
+        </button>
+        <div class="faq-panel"><p>We serve the greater Kolkata metropolitan area and suburbs within a 50km radius — including Howrah, Salt Lake, New Town, Rajarhat, Barasat, and more. For large industrial projects, we travel further on request.</p></div>
+      </div>
+
+      <div class="faq-item reveal reveal-delay-2">
+        <button class="faq-trigger">
+          <span>Do you offer warranty on installations?</span>
+          <span class="faq-plus">+</span>
+        </button>
+        <div class="faq-panel"><p>Absolutely. All our installations come with a 1-year workmanship warranty, alongside the standard manufacturer warranty on parts and components. Any issue within that period is fixed at no cost to you.</p></div>
+      </div>
+
+      <div class="faq-item reveal reveal-delay-3">
+        <button class="faq-trigger">
+          <span>How quickly can I get a quote?</span>
+          <span class="faq-plus">+</span>
+        </button>
+        <div class="faq-panel"><p>For standard residential projects, we can provide a detailed quote within 24 hours of a site visit or a WhatsApp conversation with photos. For industrial projects, we typically deliver a full proposal within 2–3 business days.</p></div>
+      </div>
+
+      <div class="faq-item reveal">
+        <button class="faq-trigger">
+          <span>Are you licensed and certified?</span>
+          <span class="faq-plus">+</span>
+        </button>
+        <div class="faq-panel"><p>Yes. All our electricians are fully licensed and certified. We carry full liability insurance on every project, and our work is compliant with the Indian Electricity Act and all relevant safety standards. You'll receive a compliance certificate on project handover.</p></div>
+      </div>
+
+      <div class="faq-item reveal reveal-delay-1">
+        <button class="faq-trigger">
+          <span>What payment methods do you accept?</span>
+          <span class="faq-plus">+</span>
+        </button>
+        <div class="faq-panel"><p>We accept cash, UPI (GPay, PhonePe, Paytm), bank transfer, and all major payment methods. For larger projects, we offer milestone-based payment schedules so you only pay as work progresses.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== CONTACT ======================== -->
+<section id="contact" class="section-pad">
+  <div class="container">
+    <div class="contact-glow"></div>
+    <div class="contact-card reveal-scale">
+      <div class="tag" style="justify-content:center">Let's talk</div>
+      <h2 class="contact-title">Ready to<br>power up?</h2>
+      <p class="contact-sub">Get a free consultation. No obligations, just answers.</p>
+
+      <div class="contact-btns">
+        <button class="btn-wa" id="waBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Chat on WhatsApp
+        </button>
+        <a href="#" class="btn-ghost" onclick="return false;" id="callBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          Call Now
+        </a>
+      </div>
+
+      <div class="phone-reveal" id="phoneReveal">
+        <span>+91 97488 95871</span>
+        <span class="phone-copy-icon">⎘</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== FOOTER ======================== -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-copy">© 2024 Zeeshan Electric · Represented by Anjali Electric</div>
+      <ul class="footer-links">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<!-- Toast -->
+<div id="toast">
+  <div class="toast-icon">✓</div>
+  <span id="toastMsg">Number copied!</span>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap');
+
+  :root {
+    --gold: #F5B800;
+    --gold-light: #FFD34E;
+    --gold-dark: #C99400;
+    --navy: #0D1B2A;
+    --navy-mid: #162435;
+    --navy-soft: #1E3247;
+    --white: #ffffff;
+    --off-white: #F7F8FA;
+    --muted: #8A9BB0;
+    --border: #D8E2EE;
+    --success: #22C55E;
+  }
+
+  /* ── SECTION WRAPPER ── */
+  .ze-booking-section {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    background-image:
+      radial-gradient(ellipse 60% 50% at 10% 20%, rgba(245,184,0,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 90% 80%, rgba(245,184,0,0.05) 0%, transparent 60%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ze-booking-section::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: -80px;
+    width: 360px; height: 360px;
+    background: radial-gradient(circle, rgba(245,184,0,0.09) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .ze-booking-section::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; right: -60px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(245,184,0,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* ── CARD ── */
+  .ze-card {
+    background: var(--white);
+    border-radius: 24px;
+    width: 100%;
+    max-width: 560px;
+    box-shadow:
+      0 0 0 1px rgba(245,184,0,0.15),
+      0 32px 80px rgba(13,27,42,0.55),
+      0 8px 24px rgba(13,27,42,0.3);
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  /* gold top accent bar */
+  .ze-card-bar {
+    height: 5px;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light));
+  }
+
+  .ze-card-body {
+    padding: 40px 44px 44px;
+  }
+
+  /* ── HEADER ── */
+  .ze-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 10px;
+  }
+
+  .ze-logo-badge {
+    width: 46px; height: 46px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(245,184,0,0.4);
+  }
+
+  .ze-logo-badge svg {
+    width: 22px; height: 22px;
+    fill: var(--navy);
+  }
+
+  .ze-brand {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .ze-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--navy);
+    margin: 18px 0 8px;
+    line-height: 1.2;
+  }
+
+  .ze-title span {
+    color: var(--gold-dark);
+  }
+
+  .ze-subtitle {
+    font-size: 14.5px;
+    color: var(--muted);
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+
+  /* ── DIVIDER ── */
+  .ze-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 32px;
+  }
+
+  /* ── FORM GRID ── */
+  .ze-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .ze-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .ze-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .ze-label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--navy-mid);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .ze-input-wrap {
+    position: relative;
+  }
+
+  .ze-input-wrap .ze-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 17px; height: 17px;
+    color: var(--muted);
+    pointer-events: none;
+    flex-shrink: 0;
+  }
+
+  .ze-input-wrap.textarea-wrap .ze-icon {
+    top: 16px;
+    transform: none;
+  }
+
+  .ze-input-wrap input,
+  .ze-input-wrap select,
+  .ze-input-wrap textarea {
+    font-family: 'DM Sans', sans-serif;
+    width: 100%;
+    padding: 13px 15px 13px 42px;
+    background: var(--off-white);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    font-size: 14.5px;
+    color: var(--navy);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .ze-input-wrap select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A9BB0' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    padding-right: 38px;
+    cursor: pointer;
+  }
+
+  .ze-input-wrap textarea {
+    resize: none;
+    height: 100px;
+    padding-top: 13px;
+    line-height: 1.5;
+  }
+
+  .ze-input-wrap input:focus,
+  .ze-input-wrap select:focus,
+  .ze-input-wrap textarea:focus {
+    border-color: var(--gold);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(245,184,0,0.12);
+  }
+
+  .ze-input-wrap input::placeholder,
+  .ze-input-wrap textarea::placeholder {
+    color: #BCC8D4;
+  }
+
+  /* ── CHECKBOX TRICK FOR SUCCESS ── */
+  #ze-submit-check {
+    display: none;
+  }
+
+  /* ── SUBMIT BUTTON (label acting as button) ── */
+  .ze-submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: var(--navy);
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow:
+      0 8px 24px rgba(245,184,0,0.35),
+      0 2px 6px rgba(245,184,0,0.2);
+    transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
+    margin-top: 6px;
+    user-select: none;
+    text-decoration: none;
+  }
+
+  .ze-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 14px 32px rgba(245,184,0,0.45),
+      0 4px 10px rgba(245,184,0,0.25);
+    filter: brightness(1.05);
+  }
+
+  .ze-submit-btn:active {
+    transform: translateY(0);
+    filter: brightness(0.97);
+  }
+
+  .ze-submit-btn svg {
+    width: 18px; height: 18px;
+    fill: var(--navy);
+    flex-shrink: 0;
+  }
+
+  /* ── TRUST ROW ── */
+  .ze-trust {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 22px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .ze-trust-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .ze-trust-item svg {
+    width: 14px; height: 14px;
+    color: var(--gold-dark);
+    flex-shrink: 0;
+  }
+
+  /* ── SUCCESS STATE ── */
+  .ze-success-overlay {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: var(--white);
+    border-radius: 24px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 48px 40px;
+    z-index: 10;
+    animation: ze-fade-in 0.4s ease;
+  }
+
+  #ze-submit-check:checked ~ .ze-card .ze-success-overlay {
+    display: flex;
+  }
+
+  #ze-submit-check:checked ~ .ze-card .ze-card-body {
+    visibility: hidden;
+  }
+
+  #ze-submit-check:checked ~ .ze-card .ze-card-bar {
+    visibility: hidden;
+  }
+
+  .ze-success-circle {
+    width: 80px; height: 80px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 24px;
+    box-shadow: 0 12px 32px rgba(245,184,0,0.4);
+    animation: ze-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+  }
+
+  .ze-success-circle svg {
+    width: 36px; height: 36px;
+    fill: none;
+    stroke: var(--navy);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .ze-success-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 10px;
+  }
+
+  .ze-success-msg {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 320px;
+  }
+
+  .ze-success-tag {
+    margin-top: 28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(245,184,0,0.1);
+    border: 1.5px solid rgba(245,184,0,0.3);
+    border-radius: 100px;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gold-dark);
+  }
+
+  .ze-success-tag svg {
+    width: 14px; height: 14px;
+    fill: var(--gold-dark);
+  }
+
+  @keyframes ze-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes ze-pop {
+    from { transform: scale(0.5); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .ze-card-body { padding: 28px 22px 32px; }
+    .ze-title { font-size: 23px; }
+    .ze-row { grid-template-columns: 1fr; }
+    .ze-trust { flex-direction: column; gap: 12px; }
+  }
+</style>
+
+<!-- Checkbox state controller (CSS-only success toggle) -->
+<input type="checkbox" id="ze-submit-check">
+
+<section class="ze-booking-section">
+  <div class="ze-card">
+
+    <!-- Gold accent bar -->
+    <div class="ze-card-bar"></div>
+
+    <div class="ze-card-body">
+
+      <!-- Header -->
+      <div class="ze-header">
+        <div class="ze-logo-badge">
+          <!-- Lightning bolt icon -->
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13L13 2Z"/>
+          </svg>
+        </div>
+        <span class="ze-brand">Zeeshan Electric</span>
+      </div>
+
+      <h2 class="ze-title">Book an <span>Electrician</span></h2>
+      <p class="ze-subtitle">Fill the form and our electrician will contact you shortly.</p>
+      <div class="ze-divider"></div>
+
+      <!-- Form -->
+      <div class="ze-form">
+
+        <!-- Row 1: Name + Phone -->
+        <div class="ze-row">
+          <div class="ze-field">
+            <label class="ze-label" for="ze-name">Full Name</label>
+            <div class="ze-input-wrap">
+              <svg class="ze-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+              </svg>
+              <input type="text" id="ze-name" placeholder="Ali Hassan" autocomplete="off">
+            </div>
+          </div>
+
+          <div class="ze-field">
+            <label class="ze-label" for="ze-phone">Phone Number</label>
+            <div class="ze-input-wrap">
+              <svg class="ze-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3.1-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 2 .7 2.9a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.2-1.2a2 2 0 012.1-.4c.9.3 1.9.6 2.9.7a2 2 0 011.7 2z"/>
+              </svg>
+              <input type="tel" id="ze-phone" placeholder="0300-0000000" inputmode="numeric">
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: Address -->
+        <div class="ze-field">
+          <label class="ze-label" for="ze-address">Address</label>
+          <div class="ze-input-wrap">
+            <svg class="ze-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+            <input type="text" id="ze-address" placeholder="House #, Street, City">
+          </div>
+        </div>
+
+        <!-- Row 3: Service Type -->
+        <div class="ze-field">
+          <label class="ze-label" for="ze-service">Service Type</label>
+          <div class="ze-input-wrap">
+            <svg class="ze-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.7 6.3a1 1 0 010 1.4l-8 8a1 1 0 01-1.4 0l-2-2a1 1 0 010-1.4l8-8a1 1 0 011.4 0l2 2z"/><path d="M20 18l-2-2M18 20l2-2"/><path d="M3.5 21L2 22"/>
+            </svg>
+            <select id="ze-service">
+              <option value="" disabled selected>Select a service…</option>
+              <option value="fan">⚡ Fan Repair</option>
+              <option value="wiring">🔌 Wiring</option>
+              <option value="switchboard">🔲 Switchboard</option>
+              <option value="ac">❄️ AC Service</option>
+              <option value="other">🛠 Other</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Row 4: Description -->
+        <div class="ze-field">
+          <label class="ze-label" for="ze-desc">Description <span style="font-size:11px;color:var(--muted);font-weight:400;text-transform:none;">(optional)</span></label>
+          <div class="ze-input-wrap textarea-wrap">
+            <svg class="ze-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+            </svg>
+            <textarea id="ze-desc" placeholder="Describe your issue briefly…"></textarea>
+          </div>
+        </div>
+
+        <!-- Submit (label triggers checkbox = CSS success state) -->
+        <label class="ze-submit-btn" for="ze-submit-check" role="button" tabindex="0">
+          <svg viewBox="0 0 24 24"><path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13L13 2Z"/></svg>
+          Book Service
+        </label>
+
+      </div><!-- /ze-form -->
+
+      <!-- Trust bar -->
+      <div class="ze-trust">
+        <div class="ze-trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          Verified Professionals
+        </div>
+        <div class="ze-trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+          Quick Response
+        </div>
+        <div class="ze-trust-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          100% Satisfaction
+        </div>
+      </div>
+
+    </div><!-- /ze-card-body -->
+
+    <!-- Success Overlay (shown via CSS when checkbox is checked) -->
+    <div class="ze-success-overlay">
+      <div class="ze-success-circle">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="ze-success-title">Booking Confirmed!</div>
+      <p class="ze-success-msg">
+        Thank you for choosing <strong>Zeeshan Electric</strong>.<br>
+        Our electrician will reach out to you shortly.
+      </p>
+      <div class="ze-success-tag">
+        <svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3.1-8.7A2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 2 .7 2.9a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.2-1.2a2 2 0 012.1-.4c.9.3 1.9.6 2.9.7a2 2 0 011.7 2z"/></svg>
+        We'll call you soon!
+      </div>
+    </div>
+
+  </div><!-- /ze-card -->
+</section>
+<div class="ze-toast" id="ze-toast">
+  <div class="ze-toast-icon">
+    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <div class="ze-toast-text">
+    <span class="ze-toast-title">Booking Sent Successfully! ⚡</span>
+    <span class="ze-toast-sub">We will contact you soon — Zeeshan Electric</span>
+  </div>
+</div>
+<!-- ====================== SCRIPTS ====================== -->
+<script>
+/* ---- Theme ---- */
+const html = document.documentElement;
+const themeBtn = document.getElementById('themeBtn');
+
+const saved = localStorage.getItem('ze-theme') || 'dark';
+html.setAttribute('data-theme', saved);
+themeBtn.textContent = saved === 'dark' ? '☀' : '☾';
+
+themeBtn.addEventListener('click', () => {
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  themeBtn.textContent = next === 'dark' ? '☀' : '☾';
+  localStorage.setItem('ze-theme', next);
+});
+
+/* ---- Mobile menu ---- */
+const hamburger = document.getElementById('hamburger');
+const mobMenu = document.getElementById('mobMenu');
+
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('active');
+  mobMenu.classList.toggle('active');
+  document.body.style.overflow = mobMenu.classList.contains('active') ? 'hidden' : '';
+});
+mobMenu.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    hamburger.classList.remove('active');
+    mobMenu.classList.remove('active');
+    document.body.style.overflow = '';
+  });
+});
+
+/* ---- Navbar scroll ---- */
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+/* ---- Intersection Observer for reveals ---- */
+const ro = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('active');
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal, .reveal-left, .reveal-scale').forEach(el => ro.observe(el));
+
+/* ---- Cursor glow ---- */
+const cursorGlow = document.getElementById('cursorGlow');
+document.addEventListener('mousemove', e => {
+  cursorGlow.style.left = e.clientX + 'px';
+  cursorGlow.style.top = e.clientY + 'px';
+}, { passive: true });
+
+/* ---- Counter animation ---- */
+function animateCounter(el, target, duration = 1800) {
+  let start = 0;
+  const step = timestamp => {
+    if (!start) start = timestamp;
+    const progress = Math.min((timestamp - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 4);
+    el.textContent = Math.floor(ease * target);
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = target;
+  };
+  requestAnimationFrame(step);
+}
+
+const counterObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const target = parseInt(e.target.dataset.target);
+      animateCounter(e.target, target);
+      counterObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('.counter').forEach(el => counterObs.observe(el));
+
+/* ---- Hero stat counters ---- */
+const heroCounters = document.querySelectorAll('.stat-num[data-count]');
+const heroObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const target = parseInt(e.target.dataset.count);
+      animateCounter(e.target, target);
+      heroObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+heroCounters.forEach(el => heroObs.observe(el));
+
+/* ---- FAQ ---- */
+document.querySelectorAll('.faq-trigger').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const isActive = item.classList.contains('active');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+    if (!isActive) item.classList.add('active');
+  });
+});
+
+/* ---- Scroll Sidebar ---- */
+const sections = ['hero','services','process','testimonials','about','contact'];
+const sidebarItems = document.querySelectorAll('.sidebar-item');
+const fills = {};
+sections.forEach(id => { fills[id] = document.getElementById('fill-' + id); });
+
+function updateSidebar() {
+  const scrollY = window.scrollY;
+  const winH = window.innerHeight;
+  const docH = document.body.scrollHeight;
+
+  let currentSection = sections[0];
+  let currentProgress = 0;
+
+  sections.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const elTop = scrollY + rect.top;
+    const elH = el.offsetHeight;
+
+    // Fill calculation
+    const progress = Math.max(0, Math.min(1, (scrollY + winH * 0.5 - elTop) / elH));
+    if (fills[id]) fills[id].style.height = (progress * 100) + '%';
+
+    // Active section
+    if (scrollY + winH * 0.45 >= elTop) {
+      currentSection = id;
+      currentProgress = progress;
+    }
+  });
+
+  sidebarItems.forEach(item => {
+    item.classList.toggle('active', item.dataset.section === currentSection);
+  });
+}
+
+window.addEventListener('scroll', updateSidebar, { passive: true });
+updateSidebar();
+
+/* ---- Process steps ---- */
+const stepVisualData = [
+  { icon: '📋', title: 'Consultation', sub: 'Free quote within 24 hours' },
+  { icon: '📐', title: 'Design', sub: 'Full electrical layout planning' },
+  { icon: '⚡', title: 'Installation', sub: 'Certified team, clean work' },
+  { icon: '✅', title: 'Handover', sub: 'Certified + 1-year warranty' },
+];
+
+const steps = document.querySelectorAll('.step-item');
+const visIcon = document.querySelector('.vis-icon');
+const visTitle = document.querySelector('.vis-title');
+const visSub = document.querySelector('.vis-sub');
+
+const stepObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      steps.forEach(s => s.classList.remove('step-active'));
+      e.target.classList.add('step-active');
+      const i = parseInt(e.target.dataset.step);
+      const d = stepVisualData[i];
+      visIcon.style.transform = 'scale(0.7) rotate(-10deg)';
+      visIcon.style.opacity = '0';
+      setTimeout(() => {
+        visIcon.textContent = d.icon;
+        visTitle.textContent = d.title;
+        visSub.textContent = d.sub;
+        visIcon.style.transform = 'scale(1) rotate(0deg)';
+        visIcon.style.opacity = '1';
+        visIcon.style.transition = 'all 0.5s cubic-bezier(0.34,1.56,0.64,1)';
+      }, 200);
+    }
+  });
+}, { threshold: 0.6, rootMargin: '-10% 0px -10% 0px' });
+
+steps.forEach(step => stepObs.observe(step));
+
+/* ---- Toast helper ---- */
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+/* ---- WhatsApp button ---- */
+const phoneNumber = '+919748895871';
+const waNumber = '919748895871';
+
+document.getElementById('waBtn').addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(phoneNumber);
+    showToast('Number copied! Opening WhatsApp…');
+  } catch {}
+  setTimeout(() => {
+    window.open('https://wa.me/' + waNumber, '_blank');
+  }, 800);
+});
+
+/* ---- Call button ---- */
+document.getElementById('callBtn').addEventListener('click', () => {
+  window.location.href = 'tel:' + phoneNumber;
+});
+
+/* ---- Phone copy ---- */
+document.getElementById('phoneReveal').addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(phoneNumber);
+    showToast('Number copied to clipboard!');
+  } catch {
+    showToast(phoneNumber);
+  }
+});
+</script>
+<script type="module" src="booking.js"></script>
+</body>
+</html>
