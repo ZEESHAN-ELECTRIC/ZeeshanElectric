@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zeeshan Admin</title>
+
+<style>
+body {
+  font-family: system-ui;
+  background: #0f172a;
+  color: white;
+  margin: 0;
+}
+
+.container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.stat {
+  font-size: 40px;
+  font-weight: bold;
+  color: #facc15;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  background: #334155;
+}
+
+tr {
+  border-bottom: 1px solid #334155;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.pending { background: orange; color: black; }
+.done { background: #22c55e; color: black; }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>⚡ Admin Panel</h1>
+
+  <div class="card">
+    <div>Total Bookings</div>
+    <div class="stat" id="total">0</div>
+  </div>
+
+  <div class="card">
+    <h3>Bookings</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Service</th>
+          <th>Status</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- FIREBASE + FETCH -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB...",
+  authDomain: "zeeshan-electric.firebaseapp.com",
+  projectId: "zeeshan-electric",
+  storageBucket: "zeeshan-electric.firebasestorage.app",
+  messagingSenderId: "1096626194064",
+  appId: "1:1096626194064:web:7b085332941be9f4513a15"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function load() {
+  const snap = await getDocs(collection(db, "bookings"));
+
+  const tbody = document.getElementById("tbody");
+  tbody.innerHTML = "";
+
+  let total = 0;
+
+  snap.forEach(doc => {
+    const d = doc.data();
+    total++;
+
+    const date = d.meta?.createdAt?.toDate
+      ? d.meta.createdAt.toDate().toLocaleDateString()
+      : "-";
+
+    const row = `
+      <tr>
+        <td>${d.customer.name}</td>
+        <td>${d.customer.phone}</td>
+        <td>${d.service.label}</td>
+        <td><span class="badge ${d.status}">${d.status}</span></td>
+        <td>${date}</td>
+      </tr>
+    `;
+
+    tbody.insertAdjacentHTML("beforeend", row);
+  });
+
+  document.getElementById("total").innerText = total;
+}
+
+load();
+</script>
+
+</body>
+</html>
